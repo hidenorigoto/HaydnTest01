@@ -92,7 +92,7 @@ $nodeSet = new Set(new ArraySource('node', $data2, new HashKeyColumnMapper()));
  * @param Set $allNodes
  * @return Set
  */
-function makeForNode($parent_id, Set $allNodes)
+function buildFromParent($parent_id, Set $allNodes)
 {
     $childNodes = $allNodes->filter(new Matcher(['parent_id' => $parent_id]));
 
@@ -100,14 +100,14 @@ function makeForNode($parent_id, Set $allNodes)
         null,
         function ($row) use ($allNodes) {
             $rowSet = new Set(new SingleRowSource('node', $row));
-            return $rowSet->union(makeForNode($row['id'], $allNodes));
+            return $rowSet->union(buildFromParent($row['id'], $allNodes));
         },
         null);
 
     return $treeSet;
 }
 
-$treeSet = makeForNode(0, $nodeSet);
+$treeSet = buildFromParent(0, $nodeSet);
 
 foreach ($treeSet as $row) {
     echo $row['id'] . ':' . $row['value'] . PHP_EOL;
