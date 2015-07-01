@@ -1,0 +1,5 @@
+{
+    "require": {
+        "quartet/haydn": "^1.2"
+    }
+}
